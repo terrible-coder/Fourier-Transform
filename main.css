@@ -1,0 +1,51 @@
+* {
+	padding: 0;
+	margin: 0;
+}
+
+body {
+	background-color: black;
+}
+
+div {
+	text-align: center;
+}
+
+.controls {
+	padding: 20px;
+	margin: 10px;
+}
+
+.control {
+	width: 70px;
+	height: 25px;
+	display: inline-block;
+	margin: 20px;
+	padding: 10px;
+	font-size: 20px;
+	color: white;
+	border: 2px solid white;
+	transition-duration: 0.5s;
+}
+
+.control:hover {
+	background-color: white;
+	color: black;
+	font-display: bold;
+	cursor: pointer;
+}
+
+header {
+	text-align: center;
+	font-size: 40px;
+	font-display: bold;
+	color: rgb(228, 224, 218);
+	/* background-color: rgb(0, 190, 133); */
+	background-image: linear-gradient(rgb(0, 190, 133), rgb(47, 79, 79), rgb(0, 0, 0));
+	padding: 20px;
+	text-underline-position: auto;
+}
+
+#display {
+	margin: 10px;
+}
