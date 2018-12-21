@@ -144,7 +144,7 @@ Complex.sub = (a, b) => Complex.add(a, Complex.mul(b, -1));
  * @param {Complex} a
  * @param {Complex} b
  */
-Complex.div = (a, b) => Complex.mul(Complex.mul(a, Complex.conj(b)), 1/Complex.amp(b));
+Complex.div = (a, b) => Complex.mul(Complex.mul(a, Complex.conj(b)), 1/Math.pow(Complex.amp(b), 2));
 
 /**
  * Returns e (the base of natural logarithms) raised to a power.
