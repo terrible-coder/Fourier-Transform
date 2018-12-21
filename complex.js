@@ -1,11 +1,9 @@
 const Complex = {};
 
-c = Complex;
-
 /**
  * Creates a representation of a complex number in the Argand (complex) plane based on its magnitude and angle made with the positive direction of the real axis.
  * @param {Number} r Magnituge of the complex number.
- * @param {Number} theta Angle made by the line joining the number to the origin with the positive X-axis.
+ * @param {Number} theta Angle made by the line joining the number to the origin with the positive real axis.
  * @returns {Complex} A new complex number.
  */
 Complex.from_polar = (r, theta) => {
