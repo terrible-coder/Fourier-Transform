@@ -2,10 +2,10 @@ const list = [];
 const a = 15*15;
 const b = 10*10;
 
-const N = 30;
+const N = 200;
 let t = 0;
 for(let k = 0; k < N; k++) {
-	list.push(Complex.from_cartesian(a*Math.cos(t)+50*Math.random(), b*Math.sin(t)+50*Math.random()));
+	list.push(Complex.from_cartesian(a*Math.cos(t)+10*Math.random(), b*Math.sin(t)+10*Math.random()));
 	t += 2*Math.PI/N;
 }
 console.log(list);
@@ -15,7 +15,8 @@ const w = Complex.from_polar(1, -2*Math.PI/N);
 console.log(w);
 // calculating coefficients
 const coeffs = [];
-for(let k = 0; k < N; k++) {
+const m = 15;
+for(let k = -m; k <= m; k++) {
 	let sum = Complex.from_cartesian(0, 0)
 	for(let n = 0; n < N; n++) {
 		const elt = Complex.pow(w, n*k);
@@ -26,7 +27,7 @@ for(let k = 0; k < N; k++) {
 // creating epicycles
 const cycles = [];
 for(let k = 0; k < coeffs.length; k++) {
-	const epi = Epicycle.create(coeffs[k], (2*Math.PI*k)/N);
+	const epi = Epicycle.create(coeffs[k], (2*Math.PI*(k-m))/N);
 	cycles.push(epi);
 }
 // appending cyclic motions

@@ -28,6 +28,7 @@ function draw() {
 	pop();
 	trace();
 	noFill();
+	stroke(0, 255, 0);
 	beginShape();
 	for(let p of path) {
 		vertex(Complex.real(p), Complex.imag(p));
@@ -51,14 +52,16 @@ function trace() {
 
 function draw_ellipse() {
 	noFill();
-	beginShape();
+	stroke(0);
+	// beginShape();
 	for(let p of list) {
-		vertex(Complex.real(p), Complex.imag(p));
+		point(Complex.real(p), Complex.imag(p));
 	}
-	endShape(CLOSE);
+	// endShape(CLOSE);
 }
 
 function draw_axes() {
+	stroke(0);
 	strokeWeight(1);
 	line(-width/2, 0, width/2, 0);
 	line(0, -height/2, 0, height/2);
