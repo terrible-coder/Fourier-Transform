@@ -48,8 +48,6 @@ Epicycle.draw = cycle => {
 	strokeWeight(1);
 	ellipse(0, 0, radius * 2);
 	line(0, 0, x, y);
-	// fill(0);
-	// ellipse(x, y, 2);
 	strokeWeight(2);
 	point(x, y);
 	if(cycle.child) {

@@ -1,4 +1,5 @@
 const cycle = Epicycle.create({r: 0, t: 0}, 0);
+const path = [];
 
 function setup() {
 	document
@@ -21,10 +22,31 @@ function draw() {
 	ellipseMode(CENTER);
 	draw_axes();
 	draw_ellipse();
+	push();
 	Epicycle.update(root);
 	Epicycle.draw(root);
+	pop();
+	trace();
+	noFill();
+	beginShape();
+	for(let p of path) {
+		vertex(Complex.real(p), Complex.imag(p));
+	}
+	endShape();
 	// Epicycle.update(cycle);
 	// Epicycle.draw(cycle);
+}
+
+function trace() {
+	let x = 0;
+	let y = 0;
+	let current = root;
+	while(current) {
+		x += Complex.real(current.point);
+		y += Complex.imag(current.point);
+		current = current.child;
+	}
+	path.push(Complex.from_cartesian(x, y));
 }
 
 function draw_ellipse() {
