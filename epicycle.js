@@ -3,6 +3,7 @@ const Epicycle = {};
 /**
  * @param {Complex} coeff Coefficient for this epicycle.
  * @param {Number} speed Angular velocity of this epicycle.
+ * @returns {Epicycle}
  */
 Epicycle.create = (coeff, speed) => {
 	return {
@@ -29,7 +30,7 @@ Epicycle.add_child = (cycle, child) => {
  */
 Epicycle.update = cycle => {
 	const dt = 1 / (frameRate() | 60);
-	const rotator = Complex.exp(Complex.mul(i, cycle.angular_speed*dt));
+	const rotator = Complex.from_polar(1, cycle.angular_speed*dt);
 	cycle.point = Complex.mul(cycle.point, rotator);
 	if(cycle.child)
 		Epicycle.update(cycle.child);
@@ -44,10 +45,13 @@ Epicycle.draw = cycle => {
 	const y = Complex.imag(cycle.point);
 	const radius = Complex.amp(cycle.coeff);
 	noFill();
+	strokeWeight(1);
 	ellipse(0, 0, radius * 2);
-	fill(0);
-	ellipse(x, y, 4);
 	line(0, 0, x, y);
+	// fill(0);
+	// ellipse(x, y, 2);
+	strokeWeight(2);
+	point(x, y);
 	if(cycle.child) {
 		translate(x, y);
 		Epicycle.draw(cycle.child);
