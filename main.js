@@ -1,5 +1,8 @@
-const cycle = Epicycle.create({r: 0, t: 0}, 0);
-const path = [];
+let face;
+
+function preload() {
+	face = loadImage("image\\alex-chivers.jpg");
+}
 
 function setup() {
 	document
@@ -7,34 +10,29 @@ function setup() {
 	  .append(
 		  createCanvas(600, 600)
 		  .canvas);
-	// const cycle2 = Epicycle.create({r: 82, t: 0}, (2/3)*PI);
-	// const cycle3 = Epicycle.create({r: 18, t: 0}, (4/3)*PI);
-	// Epicycle.add_child(cycle2, cycle3);
-	// Epicycle.add_child(cycle, cycle2);
-	// create();
+	face = process_image(face);
 }
 
 function draw() {
 	background(255);
-	translate(width/2, height/2);
-	scale(1, -1);
-	// scale(0.5, 0.5);
+	// translate(width/2, height/2);
+	// scale(1, -1);
 	ellipseMode(CENTER);
-	draw_axes();
-	draw_ellipse();
-	push();
-	Epicycle.update(root);
-	Epicycle.draw(root);
-	pop();
-	trace();
-	noFill();
-	beginShape();
-	for(let p of path) {
-		vertex(Complex.real(p), Complex.imag(p));
+	imageMode(CENTER);
+	// image(face, 0, 0);
+	// draw_axes();
+	// draw_ellipse();
+	// push();
+	// Epicycle.update(root);
+	// Epicycle.draw(root);
+	// pop();
+	// trace();
+	// noFill();
+	// beginShape();
+	for(let p of face) {
+		point(Complex.real(p), Complex.imag(p));
 	}
-	endShape();
-	// Epicycle.update(cycle);
-	// Epicycle.draw(cycle);
+	// endShape();
 }
 
 function trace() {
