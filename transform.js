@@ -10,29 +10,61 @@ for(let k = 0; k < N; k++) {
 }
 console.log(list);
 
-// transforming
-const w = Complex.from_polar(1, -2*Math.PI/N);
-console.log(w);
-// calculating coefficients
-const coeffs = [];
-const m = 15;
-for(let k = -m; k <= m; k++) {
-	let sum = Complex.from_cartesian(0, 0)
-	for(let n = 0; n < N; n++) {
-		const elt = Complex.pow(w, n*k);
-		sum = Complex.add(sum, Complex.mul(elt, list[n]));
+const Fourier = {};
+
+/**
+ * Creates a fourier object which handles the entire Fourier transform process.
+ * @param {Complex[]} list
+ * @returns {Fourier}
+ */
+Fourier.create = list => {
+	return {
+		samples: list.slice(),
+		total_points: list.length,
+		order: undefined,
+		coeffs: undefined,
+		root_cycle: null
 	}
-	coeffs.push(Complex.to_cartesian(Complex.div(sum, N)));
 }
-// creating epicycles
-const cycles = [];
-for(let k = 0; k < coeffs.length; k++) {
-	const epi = Epicycle.create(coeffs[k], (2*Math.PI*(k-m))/N);
-	cycles.push(epi);
+
+/**
+ * @param {Fourier} fourier
+ * @param {Number} order
+ */
+Fourier.set_order = (fourier, order) => {fourier.order = order};
+
+/**
+ * @param {Fourier} fourier
+ */
+Fourier.transform = fourier => {
+	const w = Complex.from_polar(1, -2*Math.PI/fourier.total_points);
+	console.log(w);
+	// calculating coefficients
+	fourier.coeffs = [];
+	for(let k = -fourier.order; k <= fourier.order; k++) {
+		let sum = Complex.from_cartesian(0, 0);
+		for(let n = 0; n < fourier.total_points; n++) {
+			const elt = Complex.pow(w, n*k);
+			const term = Complex.mul(elt, fourier.samples[n]);
+			sum = Complex.add(sum, term);
+		}
+		sum = Complex.div(sum, fourier.total_points);
+		fourier.coeffs.push(Complex.to_cartesian(sum));
+	}
 }
-// appending cyclic motions
-const root = cycles[0];
-for(let k = 1; k < cycles.length; k++) {
-	Epicycle.add_child(cycles[k-1], cycles[k]);
+
+Fourier.create_epicycles = fourier => {
+	// creating epicycles
+	const cycles = [];
+	for(let k = 0; k < fourier.coeffs.length; k++) {
+		const freq = (2 * Math.PI * (k - fourier.order)) / fourier.total_points;
+		const epi = Epicycle.create(fourier.coeffs[k], freq);
+		cycles.push(epi);
+	}
+	// appending cyclic motions
+	for(let k = 1; k < cycles.length; k++) {
+		Epicycle.add_child(cycles[k-1], cycles[k]);
+	}
+	fourier.root_cycle = cycles[0];
+	console.log(fourier.root_cycle);
 }
-console.log(cycles);

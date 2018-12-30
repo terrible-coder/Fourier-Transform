@@ -1,5 +1,5 @@
-const cycle = Epicycle.create({r: 0, t: 0}, 0);
 const path = [];
+let obj;
 
 function setup() {
 	document
@@ -7,26 +7,34 @@ function setup() {
 	  .append(
 		  createCanvas(600, 600)
 		  .canvas);
-	// const cycle2 = Epicycle.create({r: 82, t: 0}, (2/3)*PI);
-	// const cycle3 = Epicycle.create({r: 18, t: 0}, (4/3)*PI);
-	// Epicycle.add_child(cycle2, cycle3);
-	// Epicycle.add_child(cycle, cycle2);
-	// create();
+	obj = Fourier.create(list);
+	Fourier.set_order(obj, 15);
+	Fourier.transform(obj);
+	Fourier.create_epicycles(obj);
 }
 
 function draw() {
 	background(255);
+	ellipseMode(CENTER);
 	translate(width/2, height/2);
 	scale(1, -1);
-	// scale(0.5, 0.5);
-	ellipseMode(CENTER);
+	for(let c = 0; c < N/2; c++) {
+		push();
+		Epicycle.update(obj.root_cycle);
+		pop();
+		trace(obj);
+	}
 	draw_axes();
 	draw_ellipse();
 	push();
-	Epicycle.update(root);
-	Epicycle.draw(root);
+	Epicycle.draw(obj.root_cycle);
 	pop();
-	trace();
+	draw_path();
+}
+
+function draw_path() {
+	const limit = 15000;
+	if(path.length > limit)	path.splice(limit);
 	noFill();
 	stroke(0, 255, 0);
 	beginShape();
@@ -34,14 +42,12 @@ function draw() {
 		vertex(Complex.real(p), Complex.imag(p));
 	}
 	endShape();
-	// Epicycle.update(cycle);
-	// Epicycle.draw(cycle);
 }
 
-function trace() {
+function trace(fourier) {
 	let x = 0;
 	let y = 0;
-	let current = root;
+	let current = fourier.root_cycle;
 	while(current) {
 		x += Complex.real(current.point);
 		y += Complex.imag(current.point);
