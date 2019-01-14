@@ -34,6 +34,7 @@ Fourier.create = list => {
 Fourier.set_order = (fourier, order) => {fourier.order = order};
 
 /**
+ * Computes the complex Fourier coefficients of the given fourier object. Discretely integrates from -order to +order analogous to the continuous integration from -infinity to +infinity.
  * @param {Fourier} fourier
  */
 Fourier.transform = fourier => {
@@ -53,6 +54,10 @@ Fourier.transform = fourier => {
 	}
 }
 
+/**
+ * Creates the corresponding epicycles to ultimately draw out the list of points
+ * @param {Fourier} fourier
+ */
 Fourier.create_epicycles = fourier => {
 	// creating epicycles
 	const cycles = [];
