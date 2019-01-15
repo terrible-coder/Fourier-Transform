@@ -26,6 +26,16 @@ document.getElementById("file_list").onchange = event => {
 
 function image_loaded() {
 	console.log("image loaded");
-	let image = get_image_data(this);
-
+	let image = get_image_data(this, width, height);
+	image = to_matrix(image);
+	image = grayscale(image);
+	image = binarise(image, average_brightness(image)/255);
+	const boundary = outline(image);
+	context.fillStyle = "#ffffff";
+	context.fillRect(0, 0, width, height);
+	context.fillStyle = "#000000";
+	console.log(boundary);
+	boundary.forEach(point => {
+		context.fillRect(Complex.real(point), Complex.imag(point), 1, 1);
+	});
 }
