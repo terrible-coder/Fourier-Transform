@@ -167,3 +167,26 @@ function average_brightness(image) {
 			sum += image[i][j];
 	return sum / (image.length*image[0].length);
 }
+
+/**
+ * Finds the shortest path through all the points in the given list.
+ * @param {Complex[]} list List of points.
+ * @returns {Complex[]}
+ */
+function shortest_path(list) {
+	const qt = new QuadTree(4, new Rectangle(0, 0, width, height));
+	list
+	  .map(value => Complex.to_cartesian(value))
+	  .forEach(point => qt.add(point));
+	return qt.root.join();
+}
+
+function mean(list) {
+	let sum = Complex.from_cartesian(0, 0);
+	list.forEach(value => {sum = Complex.add(sum, value);});
+	return Complex.div(sum, list.length);
+}
+
+function offset(list, value) {
+	return list.map(point => Complex.sub(point, value));
+}

@@ -32,7 +32,7 @@ Epicycle.update = (cycle, dt) => {
 	const rotator = Complex.from_polar(1, cycle.angular_speed*dt);
 	cycle.point = Complex.mul(cycle.point, rotator);
 	if(cycle.child)
-		Epicycle.update(cycle.child);
+		Epicycle.update(cycle.child, dt);
 }
 
 /**
