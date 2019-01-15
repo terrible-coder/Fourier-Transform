@@ -6,11 +6,7 @@
 	<title>Fourier</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" type="text/css" media="screen" href="main.css" />
-	<script src="https://unpkg.com/p5@0.7.2/lib/p5.js"></script>
-	<script src="complex.js"></script>
-	<script src="epicycle.js"></script>
-	<script src="transform.js"></script>
-	<script src="main.js"></script>
+	<!-- <script src="https://unpkg.com/p5@0.7.2/lib/p5.js"></script> -->
 </head>
 <body>
 	<header>Fourier Transform</header>
@@ -18,6 +14,9 @@
 		<div class="control" id="start">Start</div>
 		<div class="control" id="pause">Pause</div>
 		<div class="control" id="resume">Resume</div>
+	</div>
+	<div>
+		<input type="file" name="file[]" id="file_list" />
 	</div>
 	<div id="display">
 		<div id="p5_loading">
@@ -29,5 +28,10 @@
 			</div>
 		</div>
 	</div>
+	<script src="complex.js"></script>
+	<script src="epicycle.js"></script>
+	<script src="transform.js"></script>
+	<script src="processor.js"></script>
+	<script src="main.js"></script>
 </body>
 </html>

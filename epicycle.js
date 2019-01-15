@@ -28,8 +28,7 @@ Epicycle.add_child = (cycle, child) => {
  * Recursively updates the given cycle and its child.
  * @param {Epicycle} cycle
  */
-Epicycle.update = cycle => {
-	const dt = 1 / (frameRate() | 60);
+Epicycle.update = (cycle, dt) => {
 	const rotator = Complex.from_polar(1, cycle.angular_speed*dt);
 	cycle.point = Complex.mul(cycle.point, rotator);
 	if(cycle.child)
@@ -38,20 +37,21 @@ Epicycle.update = cycle => {
 
 /**
  * Recursively draws the given cycle and its child.
+ * @param {CanvasRenderingContext2D} context
  * @param {Epicycle} cycle
  */
-Epicycle.draw = cycle => {
+Epicycle.draw = (context, cycle) => {
 	const x = Complex.real(cycle.point);
 	const y = Complex.imag(cycle.point);
 	const radius = Complex.amp(cycle.coeff);
-	noFill();
-	strokeWeight(1);
-	ellipse(0, 0, radius * 2);
-	line(0, 0, x, y);
-	strokeWeight(2);
-	point(x, y);
+	const circle = new Path2D();
+	circle.arc(0, 0, radius, 0, 2*Math.PI);
+	circle.moveTo(0, 0);
+	circle.lineTo(x, y);
+	context.stroke(circle);
+	// draw point
 	if(cycle.child) {
-		translate(x, y);
-		Epicycle.draw(cycle.child);
+		context.translate(x, y);
+		Epicycle.draw(context, cycle.child);
 	}
 }
