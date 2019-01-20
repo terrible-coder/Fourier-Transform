@@ -87,3 +87,11 @@ Fourier.draw = (context, fourier) => {
 		current = current.child;
 	}
 }
+
+Fourier.reset = fourier => {
+	let current = fourier.root_cycle;
+	while(current !== null) {
+		current.point = Complex.copy(current.coeff);
+		current = current.child;
+	}
+}

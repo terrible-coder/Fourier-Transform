@@ -160,12 +160,55 @@ function outline(image) {
 	return list;
 }
 
+/**
+ * Calculates the average brightness of the image.
+ * @param {number[][]} image Image matrix.
+ */
 function average_brightness(image) {
 	let sum = 0;
 	for(let i = 0; i < image.length; i++)
 		for(let j = 0; j < image[i].length; j++)
 			sum += image[i][j];
 	return sum / (image.length*image[0].length);
+}
+
+/**
+ * Implements the Otsu's algorithm to calculate the threshold value of image.
+ * @param {number[]} image Image matrix to work on.
+ */
+function otsu(image) {
+	const histData = new Array(256).fill(0);
+	for(let i = 0 ; i < image.length; i++) {
+		for(let j = 0; j < image[i].length; j++) {
+			const index = image[i][j];
+			histData[index]++;
+		}
+	}
+	// Total number of pixels
+	let total = image.length * image[0].length;
+	let sum = 0;
+	for (let t=0 ; t<256 ; t++) sum += t * histData[t];
+	let sumB = 0;
+	let wB = 0;
+	let wF = 0;
+	let varMax = 0,threshold = 0;
+	for (let t=0 ; t<256 ; t++) {
+		wB += histData[t];               // Weight Background
+		if (wB == 0) continue;
+		wF = total - wB;                 // Weight Foreground
+		if (wF == 0) break;
+		sumB += (t * histData[t]);
+		let mB = sumB / wB;            // Mean Background
+		let mF = (sum - sumB) / wF;    // Mean Foreground
+		// Calculate Between Class Variance
+		let varBetween = wB * wF * (mB - mF) * (mB - mF);
+		// Check if new maximum found
+		if (varBetween > varMax) {
+			varMax = varBetween;
+			threshold = t;
+		}
+	}
+	return threshold
 }
 
 /**
@@ -181,12 +224,37 @@ function shortest_path(list) {
 	return qt.root.join();
 }
 
+/**
+ * Calculates the arithmatic mean of all the points in the list.
+ * @param {Complex[]} list List of points on the Argand plane.
+ */
 function mean(list) {
 	let sum = Complex.from_cartesian(0, 0);
 	list.forEach(value => {sum = Complex.add(sum, value);});
 	return Complex.div(sum, list.length);
 }
 
+/**
+ * Translates all the points in the list by given value.
+ * @param {Complex[]} list List of points on the Argand.
+ * @param {Complex} value Offset value.
+ */
 function offset(list, value) {
 	return list.map(point => Complex.sub(point, value));
+}
+
+/**
+ * Removes the points which are less than a few pixels away in distance.
+ * For example points which are less than 1 pixel away can practically be considered as overlapping points.
+ * Hence one of the two points can be ignored for the final calculations and can therefore be removed.
+ * @param {Complex[]} list List of points on the Argand plane.
+ */
+function reduce(list) {
+	for(let i = list.length - 1; i >= 1; i--) {
+		const p1 = Complex.to_cartesian(list[i]);
+		const p2 = Complex.to_cartesian(list[i-1]);
+		if(Complex.amp(Complex.sub(p1, p2)) < 3) {
+			list.splice(i-1, 1);
+		}
+	}
 }
