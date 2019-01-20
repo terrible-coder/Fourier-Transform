@@ -27,8 +27,10 @@ div {
 }
 
 .controls {
-	padding: 20px;
-	margin: 10px;
+	padding-left: 20px;
+	margin-left: 10px;
+	padding-right: 20px;
+	margin-right: 10px;
 }
 
 .button {

@@ -8,6 +8,45 @@ canvas.width = width;
 canvas.height = height;
 const context = canvas.getContext("2d");
 document.getElementById("display").append(canvas);
+canvas.style.display = "none";
+
+let paused = false;
+let stopped = true;
+
+document.getElementById("pause").onclick = function() {
+	console.log(this.innerHTML);
+	paused = !paused;
+	if(paused)
+		this.innerHTML = "Resume";
+	else
+		this.innerHTML = "Pause";
+}
+
+document.getElementById("slow").onclick = function() {
+	speed = (speed > 1)? speed - 1: speed / 2;
+	document.getElementById("multiplier").innerHTML = speed;
+}
+
+document.getElementById("fast").onclick = function() {
+	speed = (speed > 1)? speed + 1: speed * 2;
+	document.getElementById("multiplier").innerHTML = speed;
+}
+
+document.getElementById("startstop").onclick = function() {
+	if(stopped) {
+		this.innerHTML = "Stop";
+		document.getElementById("player").style.display = "block";
+	} else {
+		this.innerHTML = "Start";
+		document.getElementById("player").style.display = "none";
+	}
+	stopped = !stopped;
+}
+
+document.getElementById("start").onclick = function() {
+	document.getElementById("go").style.display = "block";
+	this.style.display = "none";
+}
 
 document.getElementById("file_list").onchange = event => {
 	document.getElementById("loading").style.display = "block";
