@@ -1,15 +1,3 @@
-const list = [];
-const a = 15*15;
-const b = 10*10;
-
-const N = 200;
-let t = 0;
-for(let k = 0; k < N; k++) {
-	list.push(Complex.from_cartesian(a*Math.cos(t)+10*Math.random(), b*Math.sin(t)+10*Math.random()));
-	t += 2*Math.PI/N;
-}
-console.log(list);
-
 const Fourier = {};
 
 /**
@@ -39,8 +27,6 @@ Fourier.set_order = (fourier, order) => {fourier.order = order};
  */
 Fourier.transform = fourier => {
 	const w = Complex.from_polar(1, -2*Math.PI/fourier.total_points);
-	console.log(w);
-	// calculating coefficients
 	fourier.coeffs = [];
 	for(let k = -fourier.order; k <= fourier.order; k++) {
 		let sum = Complex.from_cartesian(0, 0);
@@ -66,10 +52,12 @@ Fourier.create_epicycles = fourier => {
 		const epi = Epicycle.create(fourier.coeffs[k], freq);
 		cycles.push(epi);
 	}
+	cycles.sort((a, b) => {
+		return Complex.amp(b.coeff) - Complex.amp(a.coeff);
+	})
 	// appending cyclic motions
-	for(let k = 1; k < cycles.length; k++) {
+	for(let k = 1; k < cycles.length; k++)
 		Epicycle.add_child(cycles[k-1], cycles[k]);
-	}
 	fourier.root_cycle = cycles[0];
 	console.log(fourier.root_cycle);
 }
