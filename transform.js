@@ -61,3 +61,29 @@ Fourier.create_epicycles = fourier => {
 	fourier.root_cycle = cycles[0];
 	console.log(fourier.root_cycle);
 }
+
+/**
+ * Moves every epicycle forward in time by dt.
+ * @param {Fourier} fourier
+ * @param {Number} dt Time step.
+ */
+Fourier.step = (fourier, dt) => {
+	let current = fourier.root_cycle, sum = Complex.from_cartesian(0, 0);
+	while(current !== null) {
+		sum = Complex.add(sum, Epicycle.update(current, dt));
+		current = current.child;
+	}
+	return sum;
+}
+
+/**
+ * @param {CanvasRenderingContext2D} context
+ * @param {Fourier} fourier
+ */
+Fourier.draw = (context, fourier) => {
+	let current = fourier.root_cycle;
+	while(current !== null) {
+		Epicycle.draw(context, current);
+		current = current.child;
+	}
+}

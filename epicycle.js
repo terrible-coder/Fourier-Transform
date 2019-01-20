@@ -25,18 +25,19 @@ Epicycle.add_child = (cycle, child) => {
 }
 
 /**
- * Recursively updates the given cycle and its child.
+ * Updates the given cycle.
  * @param {Epicycle} cycle
+ * @param {Number} dt Time step.
+ * @returns {Complex} The position of the point on this circle taking its center as the origin.
  */
 Epicycle.update = (cycle, dt) => {
 	const rotator = Complex.from_polar(1, cycle.angular_speed*dt);
 	cycle.point = Complex.mul(cycle.point, rotator);
-	if(cycle.child)
-		Epicycle.update(cycle.child, dt);
+	return Complex.copy(cycle.point);
 }
 
 /**
- * Recursively draws the given cycle and its child.
+ * Draws the given cycle.
  * @param {CanvasRenderingContext2D} context
  * @param {Epicycle} cycle
  */
@@ -50,8 +51,5 @@ Epicycle.draw = (context, cycle) => {
 	circle.lineTo(x, y);
 	context.stroke(circle);
 	// draw point
-	if(cycle.child) {
-		context.translate(x, y);
-		Epicycle.draw(context, cycle.child);
-	}
+	context.translate(x, y);
 }
