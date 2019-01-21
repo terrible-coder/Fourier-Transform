@@ -32,17 +32,6 @@ document.getElementById("fast").onclick = function() {
 	document.getElementById("multiplier").innerHTML = speed;
 }
 
-document.getElementById("startstop").onclick = function() {
-	if(stopped) {
-		this.innerHTML = "Stop";
-		document.getElementById("player").style.display = "block";
-	} else {
-		this.innerHTML = "Start";
-		document.getElementById("player").style.display = "none";
-	}
-	stopped = !stopped;
-}
-
 document.getElementById("start").onclick = function() {
 	document.getElementById("go").style.display = "block";
 	this.style.display = "none";
@@ -73,7 +62,7 @@ function image_loaded() {
 	console.log("processing...");
 	image = to_matrix(image);
 	image = grayscale(image);
-	image = binarise(image, average_brightness(image)/255);
+	image = binarise(image, otsu(image)/255);
 	const boundary = outline(image).map(value => Complex.to_cartesian(value));
 	context.fillStyle = "#ffffff";
 	context.fillRect(0, 0, width, height);
@@ -96,18 +85,16 @@ function image_loaded() {
 	let now = 0;
 	console.log("Done.");
 	canvas.style.display = "inline-block";
-	(function animate(time = 0) {
+	function animate(time = 0) {
 		const resolution = 2;
 		const dt = (time - now) / 1000;
 		now = time;
-		if(!paused) {
+		if(!paused && !stopped) {
 			period += dt;
-			context.resetTransform();
-			context.fillStyle = "#ffffff";
-			context.globalAlpha = 1.0;
-			context.fillRect(0, 0, width, height);
+			clear();
 			context.translate(Complex.real(origin), Complex.imag(origin));
 			context.fillStyle = "#000000";
+			draw_axes();
 			if(period*avg_ang_speed > 4*Math.PI) {
 				period = 0;
 				path = [];
@@ -125,10 +112,54 @@ function image_loaded() {
 			Fourier.draw(context, obj);
 			context.restore();
 		}
-		requestAnimationFrame(animate);
-	})();
+		if(!stopped)
+			requestAnimationFrame(animate);
+	}
+
+	function reset() {
+		now = 0;
+		period = 0;
+		path = [];
+		clear();
+		draw_axes();
+		context.resetTransform();
+		context.globalAlpha = 1.0;
+		context.fillStyle = "#000";
+		context.strokeStyle = "#000";
+		obj.root_cycle = null;
+		Fourier.create_epicycles(obj);
+	}
+
+	document.getElementById("startstop").onclick = function() {
+		stopped = !stopped;
+		if(!stopped) {
+			this.innerHTML = "Stop";
+			document.getElementById("player").style.display = "block";
+			animate();
+		} else {
+			this.innerHTML = "Start";
+			document.getElementById("player").style.display = "none";
+			reset();
+		}
+	}
 }
 
 function trace(x, y) {
 	path.push({x: x, y: y});
+}
+
+function draw_axes() {
+	const line = new Path2D();
+	line.moveTo(0, -height);
+	line.lineTo(0, height);
+	line.moveTo(width, 0);
+	line.lineTo(-width, 0);
+	context.stroke(line);
+}
+
+function clear() {
+	context.resetTransform();
+	context.fillStyle = "#ffffff";
+	context.globalAlpha = 1.0;
+	context.fillRect(0, 0, width, height);
 }
