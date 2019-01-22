@@ -11,21 +11,22 @@ body::-webkit-scrollbar {
 	display: none;
 }
 
-p {
+#head, #description, #start {
+	animation: rise 1s ease ;
+}
+
+.information {
+	color: white;
+	font-size: 15px;
 	text-align: left;
 	margin: 10px;
 	padding: 10px;
-	font-size: 30px;
-}
-
-#description {
-	color: white;
-	font-size: 15px;
+	font-size: 20px;
 }
 
 #go {
 	display: none;
-	animation: rise 1.5s ease-out;
+	animation: rise 0.5s ease;
 }
 
 div {
@@ -115,9 +116,10 @@ canvas {
 .upload-btn-wrapper {
 	position: relative;
 	overflow: hidden;
+	padding: 20px;
 	display: inline-block;
 }
-  
+
 .btn {
 	border: 2px solid gray;
 	color: gray;
@@ -134,6 +136,40 @@ canvas {
 	left: 0;
 	top: 0;
 	opacity: 0;
+}
+
+#popup {
+	display: none;
+	animation: fadein 500ms linear;
+	text-align: center;
+}
+
+#app {
+	display: none;
+	animation: fadein 500ms linear;
+}
+
+.popup_content {
+	width: 300px;
+	background-color: #555;
+	color: #fff;
+	text-align: center;
+	border-radius: 6px;
+	padding: 8px 0;
+	position: absolute;
+	left: 50%;
+	margin-left: -150px;
+}
+
+.popup_content::after {
+	content: "";
+	position: absolute;
+	bottom: 100%;
+	left: 50%;
+	margin-left: -5px;
+	border-width: 5px;
+	border-style: solid;
+	border-color: transparent transparent #555 transparent;
 }
 
 @keyframes wave {
@@ -154,10 +190,19 @@ canvas {
 @keyframes rise {
 	0% {
 		opacity: 0;
-		transform: translateY(800px);
+		transform: translateY(200%);
 	}
 	100% {
 		opacity: 1;
-		transform: translateY(0px);
+		transform: translateY(0);
+	}
+}
+
+@keyframes fadein {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
 	}
 }

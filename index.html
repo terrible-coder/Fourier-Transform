@@ -8,36 +8,50 @@
 	<link rel="stylesheet" type="text/css" media="screen" href="main.css" />
 </head>
 <body>
-	<header>Fourier Transform</header>
-	<p id="description">
+	<header><p id="head">Fourier Transform</p></header>
+	<p class="information" id="description">
 		Fourier transform is a powerful mathematical tool which can be used to change a function from the time domain to some frequency domain.
 	</p>
 	<div class="controls">
 		<div class="button" id="start">Let's go!</div>
 	</div>
 	<div id="go">
-		<div class="upload-btn-wrapper">
-			<button class="btn">Upload a file</button>
-			<input type="file" name="file[]" id="file_list" />
+		<div class="button" id="upload">Upload</div>
+		<div id="popup">
+			<div class="popup_content" id="input_options">
+				<p class="information">
+					Select a picture where the facial features are clear.
+				</p>
+				<div class="upload-btn-wrapper">
+					<button class="btn">Select file</button>
+					<input type="file" name="file[]" id="file_list" />
+				</div>
+				<div class="controls">
+					<p class="information">Resolution: </p>
+					<input type="range" name="resolution" id="res" min="1" max="10" value="3">
+				</div>
+			</div>
 		</div>
-		<div class="controls">
-			<div class="button" id="startstop">Start</div>
-		</div>
-		<div class="controls" id="player">
-			<div class="button" id="slow">Slower</div>
-			<div class="button" id="pause">Pause</div>
-			<div class="button" id="fast">Faster</div>
-		</div>
-		<div class="controls">
-			<p class="speed_control">Speed: <span id="multiplier" class="speed_control">1</span>x</p>
-		</div>
-		<div id="display">
-			<div id="loading">
-				<div class="bars">
-					<div class="bar" id="bar1"></div>
-					<div class="bar" id="bar2"></div>
-					<div class="bar" id="bar3"></div>
-					<div class="bar" id="bar4"></div>
+		<div id="app">
+			<div class="controls">
+				<div class="button" id="startstop">Start</div>
+			</div>
+			<div class="controls" id="player">
+				<div class="button" id="slow">Slower</div>
+				<div class="button" id="pause">Pause</div>
+				<div class="button" id="fast">Faster</div>
+			</div>
+			<div class="controls">
+				<p class="speed_control">Speed: <span id="multiplier" class="speed_control">1</span>x</p>
+			</div>
+			<div id="display">
+				<div id="loading">
+					<div class="bars">
+						<div class="bar" id="bar1"></div>
+						<div class="bar" id="bar2"></div>
+						<div class="bar" id="bar3"></div>
+						<div class="bar" id="bar4"></div>
+					</div>
 				</div>
 			</div>
 		</div>

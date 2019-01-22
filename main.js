@@ -54,8 +54,17 @@ document.getElementById("file_list").onchange = event => {
 	reader.readAsDataURL(file);
 }
 
+document.getElementById("upload").onclick = function() {
+	const popup = document.getElementById("popup");
+	if(popup.style.display === "block") popup.style.display = "none";
+	else popup.style.display = "block";
+}
+
 function image_loaded() {
 	document.getElementById("loading").style.display = "none";
+	document.getElementById("popup").style.display = "none";
+	document.getElementById("upload").style.display = "none";
+	document.getElementById("app").style.display = "block";
 	console.log("image loaded");
 	// preprocessing data
 	let image = get_image_data(this, width, height);
@@ -86,7 +95,7 @@ function image_loaded() {
 	console.log("Done.");
 	canvas.style.display = "inline-block";
 	function animate(time = 0) {
-		const resolution = 2;
+		const resolution = document.getElementById("res").value;
 		const dt = (time - now) / 1000;
 		now = time;
 		if(!paused && !stopped) {
