@@ -26,7 +26,7 @@ body::-webkit-scrollbar {
 
 #go {
 	display: none;
-	animation: rise 0.5s ease;
+	animation: fadein 1.5s ease;
 }
 
 div {
@@ -144,7 +144,7 @@ canvas {
 	text-align: center;
 }
 
-#app {
+#app, #uploader {
 	display: none;
 	animation: fadein 500ms linear;
 }

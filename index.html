@@ -16,7 +16,9 @@
 		<div class="button" id="start">Let's go!</div>
 	</div>
 	<div id="go">
-		<div class="button" id="upload">Upload</div>
+		<div class="controls" id="uploader">
+			<div class="button" id="upload">Upload</div>
+		</div>
 		<div id="popup">
 			<div class="popup_content" id="input_options">
 				<p class="information">
@@ -56,6 +58,32 @@
 			</div>
 		</div>
 	</div>
+	<script>
+		document.getElementById("pause").onclick = function() {
+			console.log(this.innerHTML);
+			paused = !paused;
+			if(paused) this.innerHTML = "Resume";
+			else this.innerHTML = "Pause";
+		}
+		document.getElementById("slow").onclick = function() {
+			speed = (speed > 1)? speed - 1: speed / 2;
+			document.getElementById("multiplier").innerHTML = speed;
+		}
+		document.getElementById("fast").onclick = function() {
+			speed = (speed > 1)? speed + 1: speed * 2;
+			document.getElementById("multiplier").innerHTML = speed;
+		}
+		document.getElementById("start").onclick = function() {
+			document.getElementById("go").style.display = "block";
+			document.getElementById("uploader").style.display = "block";
+			this.style.display = "none";
+		}
+		document.getElementById("upload").onclick = function() {
+			const popup = document.getElementById("popup");
+			if(popup.style.display === "block") popup.style.display = "none";
+			else popup.style.display = "block";
+		}
+	</script>
 	<script src="complex.js"></script>
 	<script src="epicycle.js"></script>
 	<script src="transform.js"></script>

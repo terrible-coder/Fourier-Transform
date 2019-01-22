@@ -13,30 +13,6 @@ canvas.style.display = "none";
 let paused = false;
 let stopped = true;
 
-document.getElementById("pause").onclick = function() {
-	console.log(this.innerHTML);
-	paused = !paused;
-	if(paused)
-		this.innerHTML = "Resume";
-	else
-		this.innerHTML = "Pause";
-}
-
-document.getElementById("slow").onclick = function() {
-	speed = (speed > 1)? speed - 1: speed / 2;
-	document.getElementById("multiplier").innerHTML = speed;
-}
-
-document.getElementById("fast").onclick = function() {
-	speed = (speed > 1)? speed + 1: speed * 2;
-	document.getElementById("multiplier").innerHTML = speed;
-}
-
-document.getElementById("start").onclick = function() {
-	document.getElementById("go").style.display = "block";
-	this.style.display = "none";
-}
-
 document.getElementById("file_list").onchange = event => {
 	document.getElementById("loading").style.display = "block";
 	canvas.style.display = "none";
@@ -54,16 +30,10 @@ document.getElementById("file_list").onchange = event => {
 	reader.readAsDataURL(file);
 }
 
-document.getElementById("upload").onclick = function() {
-	const popup = document.getElementById("popup");
-	if(popup.style.display === "block") popup.style.display = "none";
-	else popup.style.display = "block";
-}
-
 function image_loaded() {
 	document.getElementById("loading").style.display = "none";
 	document.getElementById("popup").style.display = "none";
-	document.getElementById("upload").style.display = "none";
+	document.getElementById("uploader").style.display = "none";
 	document.getElementById("app").style.display = "block";
 	console.log("image loaded");
 	// preprocessing data
@@ -90,7 +60,7 @@ function image_loaded() {
 	Fourier.transform(obj);
 	Fourier.create_epicycles(obj);
 	const avg_ang_speed = 0.01;
-	let period = 0;
+	let angle = 0;
 	let now = 0;
 	console.log("Done.");
 	canvas.style.display = "inline-block";
@@ -99,16 +69,19 @@ function image_loaded() {
 		const dt = (time - now) / 1000;
 		now = time;
 		if(!paused && !stopped) {
-			period += dt;
 			clear();
 			context.translate(Complex.real(origin), Complex.imag(origin));
 			context.fillStyle = "#000000";
 			draw_axes();
-			if(period*avg_ang_speed > 4*Math.PI) {
-				period = 0;
+			if(angle > 4*Math.PI) {
+				angle = 0;
 				path = [];
 			}
+			if(angle > Math.PI) {
+				document.getElementById("uploader").style.display = "block";
+			}
 			const loop = Math.abs(avg_ang_speed / obj.root_cycle.angular_speed) | 0;
+			angle += Math.abs(speed * loop * obj.root_cycle.angular_speed * dt);
 			const iterations = loop * resolution * speed;
 			// console.log(loop);
 			for(let i = 0; i < iterations; i++) {
@@ -127,7 +100,7 @@ function image_loaded() {
 
 	function reset() {
 		now = 0;
-		period = 0;
+		angle = 0;
 		path = [];
 		clear();
 		draw_axes();
