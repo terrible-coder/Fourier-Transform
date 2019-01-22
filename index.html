@@ -29,8 +29,8 @@
 					<input type="file" name="file[]" id="file_list" />
 				</div>
 				<div class="controls">
-					<p class="information">Resolution: </p>
 					<input type="range" name="resolution" id="res" min="1" max="10" value="3">
+					<p class="information">Resolution: <span id="res_value">3</span></p>
 				</div>
 			</div>
 		</div>
@@ -82,6 +82,9 @@
 			const popup = document.getElementById("popup");
 			if(popup.style.display === "block") popup.style.display = "none";
 			else popup.style.display = "block";
+		}
+		document.getElementById("res").oninput = function() {
+			document.getElementById("res_value").innerHTML = this.value;
 		}
 	</script>
 	<script src="complex.js"></script>

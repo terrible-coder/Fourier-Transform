@@ -66,7 +66,7 @@ function image_loaded() {
 	canvas.style.display = "inline-block";
 	function animate(time = 0) {
 		const resolution = document.getElementById("res").value;
-		const dt = (time - now) / 1000;
+		const dt = 1/25; //(time - now) / 1000;
 		now = time;
 		if(!paused && !stopped) {
 			clear();
@@ -83,9 +83,9 @@ function image_loaded() {
 			const loop = Math.abs(avg_ang_speed / obj.root_cycle.angular_speed) | 0;
 			angle += Math.abs(speed * loop * obj.root_cycle.angular_speed * dt);
 			const iterations = loop * resolution * speed;
-			// console.log(loop);
+			const time_step = dt/resolution;
 			for(let i = 0; i < iterations; i++) {
-				const end = Fourier.step(obj, dt/resolution);
+				const end = Fourier.step(obj, time_step);
 				trace(Complex.real(end), Complex.imag(end));
 			}
 			path.forEach(point => context.fillRect(point.x, point.y, 2, 2));
@@ -101,6 +101,8 @@ function image_loaded() {
 	function reset() {
 		now = 0;
 		angle = 0;
+		speed = 1;
+		document.getElementById("multiplier").innerHTML = speed;
 		path = [];
 		clear();
 		draw_axes();
@@ -127,7 +129,13 @@ function image_loaded() {
 }
 
 function trace(x, y) {
-	path.push({x: x, y: y});
+	if(path.length === 0)
+		path.push({x: x, y: y});
+	else{
+		const d = Complex.sub(path[path.length-1], {x: x, y: y})
+		if(Complex.amp(d) >= 2)
+			path.push({x: x, y: y});
+	}
 }
 
 function draw_axes() {
