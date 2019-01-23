@@ -114,24 +114,26 @@ class QuadTree {
 	lines() {
 		const shortest = this.root.join();
 		const paths = [];
-		let path = new Path2D();
-		path.moveTo(shortest[0].x, shortest[0].y);
+		let first = shortest[0];
+		let path = [first];
 		for(let i = 1; i < shortest.length; i++) {
 			const current = shortest[i];
 			const prev = shortest[i-1];
-			// path.moveTo(prev.x, prev.y);
-			if(distance(current, prev) > 10) {
-				// path.moveTo(current.x, current.y);
-				path.closePath();
+			const dist = Complex.amp(Complex.sub(current, prev));
+			if(dist > Infinity) {
+				// close running path and re-initialise path array
+				// path.push(Complex.add(first, Complex.from_cartesian(1, 1)));
+				// const pathcopy = path.slice();
+				// pathcopy.reverse().splice(0, 1);
+				// paths.push(path.concat(pathcopy));
 				paths.push(path);
-				path = new Path2D();
-				path.moveTo(shortest[i+1].x, shortest[i+1].y);
+				first = current;
+				path = [first];
 			}
 			else {
-				path.lineTo(current.x, current.y);
+				path.push(current);
 			}
 		}
-		path.closePath();
 		paths.push(path);
 		return paths;
 	}

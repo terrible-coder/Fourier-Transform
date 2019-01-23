@@ -2,6 +2,7 @@ const width = 600;
 const height = 600;
 let speed = 1;
 let path = [];
+let first = true;
 
 const canvas = document.createElement("canvas");
 canvas.width = width;
@@ -36,6 +37,7 @@ function image_loaded() {
 	document.getElementById("uploader").style.display = "none";
 	document.getElementById("app").style.display = "block";
 	console.log("image loaded");
+	const image_file = this;
 	// preprocessing data
 	let image = get_image_data(this, width, height);
 	console.log("processing...");
@@ -46,49 +48,80 @@ function image_loaded() {
 	context.fillStyle = "#ffffff";
 	context.fillRect(0, 0, width, height);
 	context.fillStyle = "#000000";
-	console.log(boundary.length);
-	let shortest = shortest_path(boundary);
-	reduce(shortest);
-	const origin = mean(shortest);
-	shortest = offset(shortest, origin);
-	console.log(shortest);
+	// console.log(boundary.length);
+	let array_shortest = shortest_path(boundary);
+	array_shortest.forEach(short => reduce(short));
+	reduce(array_shortest);
+	array_shortest.sort((listA, listB) => listB.length - listA.length);
+	console.log(array_shortest);
 	console.log("calculating...");
 	// transforming to frequency space
-	const obj = Fourier.create(shortest);
-	const order = Math.floor(0.7 * obj.samples.length);
-	Fourier.set_order(obj, order);
-	Fourier.transform(obj);
-	Fourier.create_epicycles(obj);
+	const fouriers = array_shortest.map(short => {
+		const origin = mean(short);
+		const list = offset(short, origin);
+		const obj = Fourier.create(list);
+		const order = Math.floor(0.7 * obj.samples.length);
+		Fourier.set_order(obj, order);
+		Fourier.transform(obj);
+		Fourier.create_epicycles(obj);
+		return {
+			origin: origin,
+			fourier: obj
+		}
+	});
+	console.log(fouriers);
 	const avg_ang_speed = 0.01;
+	const resolution = document.getElementById("res").value;
+	let due = 1;
+	let done = false;
+	let i = 0, count = 0;
 	let angle = 0;
 	let now = 0;
 	console.log("Done.");
 	canvas.style.display = "inline-block";
 	function animate(time = 0) {
-		const resolution = document.getElementById("res").value;
-		const dt = 1/25; //(time - now) / 1000;
+		const dt = 1/4; //(time - now) / 1000;
 		now = time;
 		if(!paused && !stopped) {
 			clear();
-			context.translate(Complex.real(origin), Complex.imag(origin));
-			context.fillStyle = "#000000";
-			draw_axes();
-			if(angle > 4*Math.PI) {
+			if(angle > 2*Math.PI) {
 				angle = 0;
-				path = [];
+				if(i === fouriers.length - 1) {
+					done = true;
+					count++;
+					i = 0;
+				} else {
+					i++;
+				}
 			}
-			if(angle > Math.PI) {
+			if(count >= 2) {
+				path = [];
+				count = 0;
+				done = false;
+			}
+			if(done) {
 				document.getElementById("uploader").style.display = "block";
 			}
-			const loop = Math.abs(avg_ang_speed / obj.root_cycle.angular_speed) | 0;
+			const obj = fouriers[i].fourier;
+			const origin = fouriers[i].origin;
+			context.fillStyle = "#000000";
+			context.globalAlpha = 0.2;
+			context.drawImage(image_file, 0, 0, width, height);
+			context.globalAlpha = 0.7;
+			path.forEach(point => context.fillRect(point.x, point.y, 2, 2));
+			context.translate(Complex.real(origin), Complex.imag(origin));
+			draw_axes();
+			let loop = Math.abs((due * avg_ang_speed) / obj.root_cycle.angular_speed) | 0;
+			due = (loop === 0)? due+1: 1;
 			angle += Math.abs(speed * loop * obj.root_cycle.angular_speed * dt);
 			const iterations = loop * resolution * speed;
 			const time_step = dt/resolution;
 			for(let i = 0; i < iterations; i++) {
 				const end = Fourier.step(obj, time_step);
-				trace(Complex.real(end), Complex.imag(end));
+				const abs = Complex.add(end, origin);
+				if(!done)
+					trace(Complex.real(abs), Complex.imag(abs));
 			}
-			path.forEach(point => context.fillRect(point.x, point.y, 2, 2));
 			context.globalAlpha = 0.2;
 			context.save();
 			Fourier.draw(context, obj);
@@ -110,8 +143,10 @@ function image_loaded() {
 		context.globalAlpha = 1.0;
 		context.fillStyle = "#000";
 		context.strokeStyle = "#000";
-		obj.root_cycle = null;
-		Fourier.create_epicycles(obj);
+		fouriers.forEach(obj => {
+			obj.fourier.root_cycle = null;
+			Fourier.create_epicycles(obj.fourier);
+		});
 	}
 
 	document.getElementById("startstop").onclick = function() {
@@ -133,7 +168,7 @@ function trace(x, y) {
 		path.push({x: x, y: y});
 	else{
 		const d = Complex.sub(path[path.length-1], {x: x, y: y})
-		if(Complex.amp(d) >= 2)
+		if(Complex.amp(d) >= 1)
 			path.push({x: x, y: y});
 	}
 }
@@ -152,4 +187,10 @@ function clear() {
 	context.fillStyle = "#ffffff";
 	context.globalAlpha = 1.0;
 	context.fillRect(0, 0, width, height);
+}
+
+function begin() {
+	const img = new Image();
+	img.onload = image_loaded;
+	img.src = "us.jpg";
 }

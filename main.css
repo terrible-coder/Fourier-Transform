@@ -12,7 +12,7 @@ body::-webkit-scrollbar {
 }
 
 #head, #description, #start {
-	animation: rise 1s ease ;
+	animation: rise 1.5s ease ;
 }
 
 .information {
@@ -147,6 +147,12 @@ canvas {
 #app, #uploader {
 	display: none;
 	animation: fadein 500ms linear;
+}
+
+#footer {
+	text-align: center;
+	left: 50%;
+	animation: rise 1.5s ease;
 }
 
 .popup_content {

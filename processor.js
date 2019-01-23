@@ -214,14 +214,14 @@ function otsu(image) {
 /**
  * Finds the shortest path through all the points in the given list.
  * @param {Complex[]} list List of points.
- * @returns {Complex[]}
+ * @returns {Complex[][]}
  */
 function shortest_path(list) {
 	const qt = new QuadTree(4, new Rectangle(0, 0, width, height));
 	list
 	  .map(value => Complex.to_cartesian(value))
 	  .forEach(point => qt.add(point));
-	return qt.root.join();
+	return qt.lines();
 }
 
 /**
@@ -251,10 +251,15 @@ function offset(list, value) {
  */
 function reduce(list) {
 	for(let i = list.length - 1; i >= 1; i--) {
-		const p1 = Complex.to_cartesian(list[i]);
-		const p2 = Complex.to_cartesian(list[i-1]);
-		if(Complex.amp(Complex.sub(p1, p2)) < 3) {
-			list.splice(i-1, 1);
+		let toSplice = false;
+		if(list[i][0] === undefined) {
+			const p1 = Complex.to_cartesian(list[i]);
+			const p2 = Complex.to_cartesian(list[i-1]);
+			toSplice = (Complex.amp(Complex.sub(p1, p2)) < 3)
+		} else {
+			toSplice = list[i].length < 20;
 		}
+		if(toSplice)
+			list.splice(i, 1);
 	}
 }

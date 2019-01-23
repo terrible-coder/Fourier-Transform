@@ -59,7 +59,6 @@ Fourier.create_epicycles = fourier => {
 	for(let k = 1; k < cycles.length; k++)
 		Epicycle.add_child(cycles[k-1], cycles[k]);
 	fourier.root_cycle = cycles[0];
-	console.log(fourier.root_cycle);
 }
 
 /**

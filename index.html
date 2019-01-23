@@ -10,7 +10,7 @@
 <body>
 	<header><p id="head">Fourier Transform</p></header>
 	<p class="information" id="description">
-		Fourier transform is a powerful mathematical tool which can be used to change a function from the time domain to some frequency domain.
+		Fourier transform is a powerful mathematical tool which can be used to change a function from the time domain to some frequency domain. It can trace out any arbitrary closed loop, however irregular.
 	</p>
 	<div class="controls">
 		<div class="button" id="start">Let's go!</div>
@@ -22,7 +22,7 @@
 		<div id="popup">
 			<div class="popup_content" id="input_options">
 				<p class="information">
-					Select a picture where the facial features are clear.
+					Select a picture where the facial features are clear. Before uploading choose what resolution you would like in the final image.
 				</p>
 				<div class="upload-btn-wrapper">
 					<button class="btn">Select file</button>
@@ -74,8 +74,12 @@
 			document.getElementById("multiplier").innerHTML = speed;
 		}
 		document.getElementById("start").onclick = function() {
+			if(first) {
+				begin();
+				first = false;
+			} else
+				document.getElementById("uploader").style.display = "block";
 			document.getElementById("go").style.display = "block";
-			document.getElementById("uploader").style.display = "block";
 			this.style.display = "none";
 		}
 		document.getElementById("upload").onclick = function() {
@@ -93,5 +97,8 @@
 	<script src="quadtree.js"></script>
 	<script src="processor.js"></script>
 	<script src="main.js"></script>
+	<div id="footer">
+		<p class="information">Made with love for Swikriti</div>
+	</div>
 </body>
 </html>
